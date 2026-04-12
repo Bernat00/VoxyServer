@@ -225,7 +225,7 @@ public class LodStreamingService {
             if (tracker == null || !tracker.isReady() || !tracker.isLodEnabled()) continue;
 
             tracker.updatePosition(player);
-            ServerLevel level = player.level();
+            ServerLevel level = (ServerLevel) player.level();
             WorldIdentifier worldId = WorldIdentifier.of(level);
             if (worldId == null) continue;
 
@@ -235,8 +235,8 @@ public class LodStreamingService {
                     tracker.getLastChunkZ(),
                     worldId,
                     level.dimension().location(),
-                    level.getMinSectionY() >> 1,
-                    (level.getMaxSectionY() >> 1) + 1,
+                    level.getMinY() >> 4 >> 1,
+                    ((level.getMinY() + level.getHeight() - 1) >> 4 >> 1) + 1,
                     level.registryAccess().registryOrThrow(Registries.BIOME)
             ));
         }

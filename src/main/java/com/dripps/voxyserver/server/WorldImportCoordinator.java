@@ -118,7 +118,7 @@ public class WorldImportCoordinator {
             source.sendFailure(Component.literal("current can only be used by a player"));
             return false;
         }
-        return this.startDimension(source, player.level());
+        return this.startDimension(source, (ServerLevel) player.level());
     }
 
     public boolean startDimension(CommandSourceStack source, ServerLevel level) {

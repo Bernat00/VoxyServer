@@ -86,7 +86,7 @@ public class ChunkVoxelizer {
     private List<Integer> markPendingChunkSections(ServerLevel level, LevelChunk chunk) {
         ResourceLocation dimension = level.dimension().location();
         List<Integer> pendingSectionYs = new ArrayList<>();
-        int chunkSectionY = chunk.getMinSectionY() - 1;
+        int chunkSectionY = (level.getMinY() >> 4) - 1;
         int lastWorldSecY = Integer.MIN_VALUE;
         for (var ignored : chunk.getSections()) {
             chunkSectionY++;

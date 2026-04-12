@@ -71,7 +71,7 @@ public class ServerLodEngine extends VoxyInstance {
     }
 
     public WorldEngine getOrCreate(WorldIdentifier identifier, ResourceLocation dimension) {
-        if (identifier == null || !this.isRunning()) {
+        if (identifier == null) {
             return null;
         }
         this.dimensionsByWorld.put(identifier, dimension);
@@ -92,9 +92,6 @@ public class ServerLodEngine extends VoxyInstance {
 
     @Override
     public WorldEngine getOrCreate(WorldIdentifier identifier) {
-        if (!this.isRunning()) {
-            return null;
-        }
         WorldEngine world;
         try {
             world = super.getOrCreate(identifier);
@@ -130,7 +127,7 @@ public class ServerLodEngine extends VoxyInstance {
 
         int worldSecX = chunk.getPos().x >> 1;
         int worldSecZ = chunk.getPos().z >> 1;
-        int chunkSectionY = chunk.getMinSectionY() - 1;
+        int chunkSectionY = (chunk.getMinY() >> 4) - 1;
         int lastWorldSecY = Integer.MIN_VALUE;
         for (var ignored : chunk.getSections()) {
             chunkSectionY++;
@@ -219,7 +216,11 @@ public class ServerLodEngine extends VoxyInstance {
         try {
             this.presenceIndexExecutor.execute(() -> {
                 try {
-                    world.storage.iteratePositions(0, key -> index.addTo(filter, key));
+                    world.storage.iterateStoredSectionPositions(key -> {
+                        if (WorldEngine.getLevel(key) == 0) {
+                            index.addTo(filter, key);
+                        }
+                    });
                     index.completeBuild(filter);
                 } catch (Exception e) {
                     Voxyserver.LOGGER.warn("failed to build presence index for {}", identifier.getLongHash(), e);

@@ -38,7 +38,9 @@ public class IdRemapper {
         String biomeName = entries[biomeId].biome;
         if (biomeName == null) return 0;
         ResourceLocation biomeKey = ResourceLocation.parse(biomeName);
-        return biomeRegistry.getId(biomeRegistry.getValue(biomeKey));
+        Biome biome = biomeRegistry.get(biomeKey);
+        if (biome == null) return 0;
+        return biomeRegistry.getId(biome);
     }
 
     public static int getLightFromMapping(long mappingId) {
