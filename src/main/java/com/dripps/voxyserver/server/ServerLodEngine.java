@@ -1,8 +1,10 @@
 package com.dripps.voxyserver.server;
 
 import com.dripps.voxyserver.Voxyserver;
-import me.cortex.voxy.common.StorageConfigUtil;
 import me.cortex.voxy.common.config.ConfigBuildCtx;
+import me.cortex.voxy.common.config.compressors.ZSTDCompressor;
+import me.cortex.voxy.common.config.storage.other.CompressionStorageAdaptor;
+import me.cortex.voxy.common.config.storage.rocksdb.RocksDBStorageBackend;
 import me.cortex.voxy.common.config.section.SectionStorage;
 import me.cortex.voxy.common.config.section.SectionSerializationStorage;
 import me.cortex.voxy.common.world.WorldEngine;
@@ -39,7 +41,15 @@ public class ServerLodEngine extends VoxyInstance {
     public ServerLodEngine(Path worldFolder) {
         super();
         this.basePath = worldFolder.resolve("voxyserver");
-        this.storageConfig = StorageConfigUtil.createDefaultSerializer();
+        var baseDB = new RocksDBStorageBackend.Config();
+        var compressor = new ZSTDCompressor.Config();
+        compressor.compressionLevel = 1;
+        var compression = new CompressionStorageAdaptor.Config();
+        compression.delegate = baseDB;
+        compression.compressor = compressor;
+        var serializer = new SectionSerializationStorage.Config();
+        serializer.storage = compression;
+        this.storageConfig = serializer;
         this.updateDedicatedThreads();
         Voxyserver.LOGGER.info("server lod engine started, storage at {}", this.basePath);
     }
