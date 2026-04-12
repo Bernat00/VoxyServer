@@ -127,7 +127,7 @@ public class ServerLodEngine extends VoxyInstance {
 
         int worldSecX = chunk.getPos().x >> 1;
         int worldSecZ = chunk.getPos().z >> 1;
-        int chunkSectionY = (chunk.getMinY() >> 4) - 1;
+        int chunkSectionY = (chunk.getMinBuildHeight() >> 4) - 1;
         int lastWorldSecY = Integer.MIN_VALUE;
         for (var ignored : chunk.getSections()) {
             chunkSectionY++;

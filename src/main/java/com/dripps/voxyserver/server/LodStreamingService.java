@@ -235,8 +235,8 @@ public class LodStreamingService {
                     tracker.getLastChunkZ(),
                     worldId,
                     level.dimension().location(),
-                    level.getMinY() >> 4 >> 1,
-                    ((level.getMinY() + level.getHeight() - 1) >> 4 >> 1) + 1,
+                    level.getMinBuildHeight() >> 4 >> 1,
+                    ((level.getMinBuildHeight() + level.getHeight() - 1) >> 4 >> 1) + 1,
                     level.registryAccess().registryOrThrow(Registries.BIOME)
             ));
         }
