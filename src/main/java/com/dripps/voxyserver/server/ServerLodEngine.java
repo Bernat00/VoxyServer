@@ -216,10 +216,8 @@ public class ServerLodEngine extends VoxyInstance {
         try {
             this.presenceIndexExecutor.execute(() -> {
                 try {
-                    world.storage.iterateStoredSectionPositions(key -> {
-                        if (WorldEngine.getLevel(key) == 0) {
-                            index.addTo(filter, key);
-                        }
+                    world.storage.iteratePositions(0, key -> {
+                        index.addTo(filter, key);
                     });
                     index.completeBuild(filter);
                 } catch (Exception e) {
